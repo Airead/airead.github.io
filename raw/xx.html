@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <script src="js/lib/jquery-2.2.2.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: black;
+        }
+
+        .board {
+            display: flex;
+            /*justify-content:space-around;*/
+            flex-flow: row wrap;
+        }
+
+        .circle {
+            width: 20px;
+            height: 20px;
+            background: #777777;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+    </div>
+
+    <script type="text/javascript">
+        var num = 5000;
+        var i;
+        var colors = ['#ffffff', '#ff0000', '#00ff00', '#0000ff'];
+
+        var $board = $('<div class="board"></div>');
+
+        for (i = 0; i < num; i++) {
+            var color = colors[randInt(0, colors.length)];
+            var $circle = $('<div class="circle" style="background: ' + color + '"></div>');
+            $board.append($circle);
+        }
+
+        $('.container').append($board);
+
+        function randInt(low, high) {
+            return parseInt(low + Math.random() * (high - low));
+        }
+    </script>
+</body>
+
+</html>

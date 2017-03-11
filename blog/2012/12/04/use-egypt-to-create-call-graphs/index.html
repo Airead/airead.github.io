@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Use Egypt To Create Call Graphs | Airead Fan&#39;s</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Call graphs could give a big picture which makes you better and faster understanding of one project.Egypt is a simple tool for creating call graphs of C programs. Egypt neither analyzes source code no">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Use Egypt To Create Call Graphs">
+<meta property="og:url" content="http://www.aireadfun.com/blog/2012/12/04/use-egypt-to-create-call-graphs/index.html">
+<meta property="og:site_name" content="Airead Fan's">
+<meta property="og:description" content="Call graphs could give a big picture which makes you better and faster understanding of one project.Egypt is a simple tool for creating call graphs of C programs. Egypt neither analyzes source code no">
+<meta property="og:image" content="http://www.aireadfun.com/images/graphviz/summary.svg">
+<meta property="og:updated_time" content="2015-10-01T05:06:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Use Egypt To Create Call Graphs">
+<meta name="twitter:description" content="Call graphs could give a big picture which makes you better and faster understanding of one project.Egypt is a simple tool for creating call graphs of C programs. Egypt neither analyzes source code no">
+<meta name="twitter:image" content="http://www.aireadfun.com/images/graphviz/summary.svg">
+  
+    <link rel="alternative" href="/atom.xml" title="Airead Fan&#39;s" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Airead Fan&#39;s</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Fragments of memories</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.aireadfun.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-use-egypt-to-create-call-graphs" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2012/12/04/use-egypt-to-create-call-graphs/" class="article-date">
+  <time datetime="2012-12-04T07:36:00.000Z" itemprop="datePublished">2012-12-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux-tools-graphviz/">linux-tools graphviz</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Use Egypt To Create Call Graphs
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Call graphs could give a big picture which makes you better and faster understanding of one project.<br><a href="http://www.gson.org/egypt/" target="_blank" rel="external">Egypt</a> is a simple tool for creating call graphs of C programs. Egypt neither analyzes source code nor lays out graphs. Instead, it leaves the source code analysis to GCC and the graph layout to Graphviz, both of which are better at their respective jobs than egypt itself could ever hope to be. Egypt is simply a very small Perl script that glues these existing tools together.  </p>
+<a id="more"></a>
+<h2 id="Install-Egypt"><a href="#Install-Egypt" class="headerlink" title="Install Egypt"></a>Install Egypt</h2><p>The most recent release of egypt is version 1.10, which can be downloaded <a href="http://www.gson.org/egypt/download/egypt-1.10.tar.gz" target="_blank" rel="external">here</a>. Online documentation is <a href="http://www.gson.org/egypt/egypt.html" target="_blank" rel="external">here</a>. You will also need gcc, Perl, and <a href="http://www.graphviz.org/" target="_blank" rel="external">Graphviz</a>.</p>
+<p>To install, extract the compressed tar file, cd to the egypt directory, and type<br><code><br>perl Makefile.PL<br>make<br>make install<br></code>  </p>
+<h2 id="Generate-Call-Graph"><a href="#Generate-Call-Graph" class="headerlink" title="Generate Call Graph"></a>Generate Call Graph</h2><p>First of all, one project is necessary. you can <a href="/downloads/code/graphviz/summary-1.0.1.tar.gz">DOWNLOAD</a> this project or select other one you prefered.<br>cd to summary-1.0.1, and type<br><code><br>./configure<br>make CFLAGS=-fdump-rtl-expand<br></code><br>Each .c in project will generate a corresponding .expand. Egypt uses these .expand files to generate the .dot file, and graphviz use .dot file to generate call graph. For example,<br><code><br>./src/person/main.c.144r.expand<br>./src/person/do.c.144r.expand<br>./src/lib/lib.c.144r.expand<br></code><br>will be generated in summary project. </p>
+<p>Now type<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">egypt .<span class="regexp">/src/</span>person<span class="regexp">/main.c.144r.expand ./</span>src<span class="regexp">/person/</span><span class="keyword">do</span>.c.<span class="number">144</span>r.expand .<span class="regexp">/src/</span>lib<span class="regexp">/lib.c.144r.expand | dot -Grankdir=LR -Tsvg -o summary.svg</span></div></pre></td></tr></table></figure></p>
+<p>then open summary.svg which is shown below.<br><img src="/images/graphviz/summary.svg" class="center"><br>Note that, the dash line represents function pointer (C language) calling, the picture makes you better and faster understanding of this project. The main() directly call analyze<em>person(), and call do\</em>*() by calling function pointer. The do_*() directly call lib_print().  </p>
+<p>You will happy to use egypt and graphviz to study a unfamiliar project. Enjoy it!</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a href="http://www.gson.org/egypt/" target="_blank" rel="external">egypt index</a></li>
+<li><a href="http://openbrd.com/?p=35" target="_blank" rel="external">Go to Egypt for Call Graph</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.aireadfun.com/blog/2012/12/04/use-egypt-to-create-call-graphs/" data-id="cj054kddh000h3bk0d5k18vzm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2012/12/10/git-server-group-level-structures/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Git server group-level structures
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2012/12/03/study-automake/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Step-By-Step Example Of Autotools For Beginner</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/R/">R</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/airead-manager/">airead-manager</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bugzilla-nginx/">bugzilla nginx</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/career/">career</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dbus-glib/">dbus-glib</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/emacs/">emacs</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git-ssh/">git ssh</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-autotools/">linux-tools autotools</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-git/">linux-tools git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-graphviz/">linux-tools graphviz</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nodejs/">nodejs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/octopress/">octopress</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python-buildout/">python buildout</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/哲学/">哲学</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">June 2014</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">August 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">March 2013</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">February 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">January 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">December 2012</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">November 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">March 2012</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">August 2011</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step7/">airead-manager-outline-step7</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step6/">airead-manager-outline-step6</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step5/">airead-manager-outline-step5</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step4/">airead-manager-outline-step4</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step3/">airead-manager-outline-step3</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Airead Fan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

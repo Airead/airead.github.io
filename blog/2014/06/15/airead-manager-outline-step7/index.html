@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>airead-manager-outline-step7 | Airead Fan&#39;s</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="添加权限限制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="airead-manager-outline-step7">
+<meta property="og:url" content="http://www.aireadfun.com/blog/2014/06/15/airead-manager-outline-step7/index.html">
+<meta property="og:site_name" content="Airead Fan's">
+<meta property="og:description" content="添加权限限制">
+<meta property="og:updated_time" content="2015-10-01T05:06:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="airead-manager-outline-step7">
+<meta name="twitter:description" content="添加权限限制">
+  
+    <link rel="alternative" href="/atom.xml" title="Airead Fan&#39;s" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Airead Fan&#39;s</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Fragments of memories</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.aireadfun.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-airead-manager-outline-step7" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2014/06/15/airead-manager-outline-step7/" class="article-date">
+  <time datetime="2014-06-15T13:52:00.000Z" itemprop="datePublished">2014-06-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/airead-manager/">airead-manager</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      airead-manager-outline-step7
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>添加权限限制</p>
+<a id="more"></a>
+<h2 id="后端添加新加权限"><a href="#后端添加新加权限" class="headerlink" title="后端添加新加权限"></a>后端添加新加权限</h2><p>在 <code>utils/permission.py</code> 中添加三行，增加 <code>hello</code> 权限。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">RoleList = [</div><div class="line">    ...</div><div class="line">    <span class="string">'groupManager'</span>,</div><div class="line">    <span class="string">'hello'</span>  # add <span class="keyword">this</span> line, hello role</div><div class="line">]</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Roles</span></span>(<span class="keyword">object</span>):</div><div class="line">    ...</div><div class="line">    groupManager = RoleNeed(<span class="string">'groupManager'</span>)</div><div class="line">    hello = RoleNeed(<span class="string">'hello'</span>)  # add <span class="keyword">this</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Permissions</span></span>(<span class="keyword">object</span>):</div><div class="line">    ...</div><div class="line">    groupManager = Permission(Roles.groupManager)</div><div class="line">    hello = Permission(Roles.hello)  # add <span class="keyword">this</span></div></pre></td></tr></table></figure></p>
+<h2 id="在-create-db-py-中初始化新权限"><a href="#在-create-db-py-中初始化新权限" class="headerlink" title="在 create_db.py 中初始化新权限"></a>在 create_db.py 中初始化新权限</h2><p>权限目前只能通过初始化获得，管理员不能添加新的权限。所以需要在 create_db.py 中初始化新权限。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">permission_init</span><span class="params">()</span>:</span></div><div class="line">    permissions = [</div><div class="line">        &#123;<span class="string">'name'</span>: <span class="string">u'管理员'</span>, <span class="string">'tag'</span>: <span class="string">'admin'</span>&#125;,</div><div class="line">        &#123;<span class="string">'name'</span>: <span class="string">u'游客'</span>, <span class="string">'tag'</span>: <span class="string">'guest'</span>&#125;,</div><div class="line">        &#123;<span class="string">'name'</span>: <span class="string">u'数据库管理'</span>, <span class="string">'tag'</span>: <span class="string">'databaseManager'</span>&#125;,</div><div class="line">        &#123;<span class="string">'name'</span>: <span class="string">u'数据库设置'</span>, <span class="string">'tag'</span>: <span class="string">'databaseSetting'</span>&#125;,</div><div class="line">        &#123;<span class="string">'name'</span>: <span class="string">u'系统设置'</span>, <span class="string">'tag'</span>: <span class="string">'systemSetting'</span>&#125;,</div><div class="line">        &#123;<span class="string">'name'</span>: <span class="string">u'节假日'</span>, <span class="string">'tag'</span>: <span class="string">'holidayManager'</span>&#125;,</div><div class="line">        &#123;<span class="string">'name'</span>: <span class="string">u'用户管理'</span>, <span class="string">'tag'</span>: <span class="string">'userManager'</span>&#125;,</div><div class="line">        &#123;<span class="string">'name'</span>: <span class="string">u'管理组设置'</span>, <span class="string">'tag'</span>: <span class="string">'groupManager'</span>&#125;,</div><div class="line">        &#123;<span class="string">'name'</span>: <span class="string">u'world'</span>, <span class="string">'tag'</span>: <span class="string">'hello'</span>&#125;,  <span class="comment"># add this</span></div><div class="line">    ]</div></pre></td></tr></table></figure>
+<p>然后运行 <code>python aireadManager/create_db.py</code> 初始化权限。</p>
+<p>这时，应该能够在 <code>用户组管理</code> 的编辑界面看到 <code>world</code> 权限。</p>
+<h2 id="让删除接口受-world-权限限制"><a href="#让删除接口受-world-权限限制" class="headerlink" title="让删除接口受 world 权限限制"></a>让删除接口受 world 权限限制</h2><p>在 <code>blueprints/rest/persons.py</code> 添加权限支持，修改如下：</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> aireadManager.utils.permissions <span class="keyword">import</span> Permissions</div><div class="line"></div><div class="line">...</div><div class="line"></div><div class="line">    @Permissions.hello.<span class="built_in">require</span>(<span class="number">403</span>)  <span class="comment"># add this line</span></div><div class="line">    def <span class="keyword">delete</span>(self, pid):</div><div class="line">        db.session.query(PersonModel).filter_by(id=pid).<span class="keyword">delete</span>()</div><div class="line">        db.session.commit()</div><div class="line"></div><div class="line">        <span class="keyword">return</span> &#123;<span class="string">'code'</span>: Code.SUCCESS&#125;</div></pre></td></tr></table></figure>
+<p>现在我们再去删除 person, 将会收到 403 (FORBIDDEN) 错误了。</p>
+<h2 id="让前端不显示没有权限的菜单"><a href="#让前端不显示没有权限的菜单" class="headerlink" title="让前端不显示没有权限的菜单"></a>让前端不显示没有权限的菜单</h2><ul>
+<li>添加 Roles 定义，修改 <code>static/coffee/utils.coffee</code> 如下：</li>
+</ul>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">define [], () -&gt;</div><div class="line">  Roles =</div><div class="line">    admin: <span class="string">'admin'</span></div><div class="line">    gues<span class="variable">t:</span> <span class="string">'guest'</span></div><div class="line">    databaseManager: <span class="string">'databaseManager'</span></div><div class="line">    databaseSettin<span class="variable">g:</span> <span class="string">'databaseSetting'</span></div><div class="line">    systemSettin<span class="variable">g:</span> <span class="string">'systemSetting'</span></div><div class="line">    holidayManager: <span class="string">'holidayManager'</span></div><div class="line">    userManager: <span class="string">'userManager'</span></div><div class="line">    groupManager: <span class="string">'groupManager'</span></div><div class="line">    hello: <span class="string">'hello'</span>  # <span class="built_in">add</span> this <span class="built_in">line</span></div><div class="line"></div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    Role<span class="variable">s:</span> Roles</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>为 <code>world.coffee</code> 加 role 需求</li>
+</ul>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">## 使用 utils.coffee</div><div class="line">define [<span class="string">'./base'</span>, <span class="string">'jQuery'</span>, <span class="string">'static/js/utils'</span>], (indexCtlModule, $, utils) -&gt;</div><div class="line"></div><div class="line">...</div><div class="line"></div><div class="line">  ret =  # static/coffee/routes 跟据这个返回值注册前端路由</div><div class="line">    group: <span class="string">'学习'</span>  # 定义这个模块包含于哪个大组</div><div class="line">    item: <span class="string">'item Hello'</span>  # item 名称</div><div class="line">    url: moduleName  # 注册的 url</div><div class="line">    role: utils.Roles.hello  # hello 角色需求, add this line</div></pre></td></tr></table></figure>
+<p>再次刷新页面，<code>item hello</code> 菜单应该已经隐藏了。</p>
+<h2 id="重现-item-hello-菜单"><a href="#重现-item-hello-菜单" class="headerlink" title="重现 item hello 菜单"></a>重现 item hello 菜单</h2><p>为当前登陆用户的用户组添加 <code>world</code> 权限，就可以让 <code>item hello</code> 菜单重现，并拥有删除权限</p>
+<p><code>git checkout step7</code> 查看源码</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.aireadfun.com/blog/2014/06/15/airead-manager-outline-step7/" data-id="cj054kdfp001y3bk0svnknje0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/blog/2014/06/15/airead-manager-outline-step6/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">airead-manager-outline-step6</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/R/">R</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/airead-manager/">airead-manager</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bugzilla-nginx/">bugzilla nginx</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/career/">career</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dbus-glib/">dbus-glib</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/emacs/">emacs</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git-ssh/">git ssh</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-autotools/">linux-tools autotools</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-git/">linux-tools git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-graphviz/">linux-tools graphviz</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nodejs/">nodejs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/octopress/">octopress</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python-buildout/">python buildout</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/哲学/">哲学</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">June 2014</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">August 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">March 2013</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">February 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">January 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">December 2012</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">November 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">March 2012</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">August 2011</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step7/">airead-manager-outline-step7</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step6/">airead-manager-outline-step6</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step5/">airead-manager-outline-step5</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step4/">airead-manager-outline-step4</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step3/">airead-manager-outline-step3</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Airead Fan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

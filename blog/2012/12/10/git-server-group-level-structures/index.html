@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Git server group-level structures | Airead Fan&#39;s</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="If you use a small number of git, you can use the following steps to quickly deploy a git server environment. For example, as I am now the situation to two people on assignment to Qita company to do p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git server group-level structures">
+<meta property="og:url" content="http://www.aireadfun.com/blog/2012/12/10/git-server-group-level-structures/index.html">
+<meta property="og:site_name" content="Airead Fan's">
+<meta property="og:description" content="If you use a small number of git, you can use the following steps to quickly deploy a git server environment. For example, as I am now the situation to two people on assignment to Qita company to do p">
+<meta property="og:updated_time" content="2015-10-01T05:06:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git server group-level structures">
+<meta name="twitter:description" content="If you use a small number of git, you can use the following steps to quickly deploy a git server environment. For example, as I am now the situation to two people on assignment to Qita company to do p">
+  
+    <link rel="alternative" href="/atom.xml" title="Airead Fan&#39;s" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Airead Fan&#39;s</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Fragments of memories</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.aireadfun.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-git-server-group-level-structures" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2012/12/10/git-server-group-level-structures/" class="article-date">
+  <time datetime="2012-12-10T01:57:00.000Z" itemprop="datePublished">2012-12-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux-tools-git/">linux-tools git</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Git server group-level structures
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>If you use a small number of git, you can use the following steps to quickly deploy a git server environment. For example, as I am now the situation to two people on assignment to Qita company to do projects, but to do something that is completely independent of the time in addition to the integration of other projects with the company code group interaction, and usually can not be free to interact with the code, alas, shit’s security, other times on my two visits. </p>
+<a id="more"></a>
+<h2 id="SSH-public-key-generation"><a href="#SSH-public-key-generation" class="headerlink" title="SSH public key generation"></a>SSH public key generation</h2><p>Each need to use git server engineers, they need to generate a ssh public key into your ~ /. Ssh directory to see if a file name and file name to use. Pub named after a pair of files, the file name is usually id_dsa or id_rsa . . Pub is the public key file, another file is key. Without these files (or simply connected. Ssh directory are not), you can use the program ssh-keygen to create them, the program in the Linux / Mac systems provided by the SSH package in Windows, is included in MSysGit bag:  </p>
+<p><code><br>$ ssh-keygen<br>Generating public/private rsa key pair.<br>Enter file in which to save the key (/Users/schacon/.ssh/id_rsa):<br>Enter passphrase (empty for no passphrase):<br>Enter same passphrase again:<br>Your identification has been saved in /Users/schacon/.ssh/id_rsa.<br>Your public key has been saved in /Users/schacon/.ssh/id_rsa.pub.<br>The key fingerprint is:<br>43:c5:5b:5f:b1:f1:50:43:ad:20:a6:92:6a:1f:9a:3a schacon@agadorlaptop.local<br></code>  </p>
+<p>It first asks you to confirm the position of saving the public key (.ssh / id_rsa), then it will let you repeat a password twice, if you do not want to enter a password when using the public key can be left blank. </p>
+<p>Now, all users have done this step had to put their public key to your server administrator or Git (assuming the service is configured to use SSH public key mechanism). They only need to copy. Pub file contents and then e-email it. The way the public key as follows: </p>
+<p><code><br>$ cat ~/.ssh/id_rsa.pub<br>ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU<br>GPl+nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3<br>Pbv7kOdJ/MTyBlWXFCR+HAo3FXRitBqxiX1nKhXpHAZsMciLq8V6RjsNAQwdsdMFvSlVK/7XA<br>t3FaoJoAsncM1Q9x5+3V0Ww68/eIFmb1zuUFljQJKprrX88XypNDvjYNby6vw/Pb0rwert/En<br>mZ+AW4OZPnTPI89ZPmVMLuayrD2cE86Z/il8b+gw3r3+1nKatmIkjn2so1d01QraTlMqVSsbx<br>NrRFi9wrf+M7Q== test@agadorlaptop.local<br></code>  </p>
+<h2 id="Set-up-the-server"><a href="#Set-up-the-server" class="headerlink" title="Set up the server"></a>Set up the server</h2><p>First, create a ‘git’ user and to create a. Ssh directory in the user home directory:  </p>
+<p><code><br>$ sudo adduser git<br>$ su git<br>$ cd<br>$ mkdir .ssh<br></code>  </p>
+<p>Next, the developer of the SSH public key added to the user’s authorized_keys file. Suppose you received via e-mail co-existence of several public key to a temporary file. Authorized_keys file as long as they are added </p>
+<p><code><br>$ cat /tmp/id_rsa.curtis.pub &gt;&gt; ~/.ssh/authorized_keys<br>$ cat /tmp/id_rsa.dylan.pub &gt;&gt; ~/.ssh/authorized_keys<br></code>  </p>
+<p>Now you can use the-bare option to run git init to set an empty warehouse, which will initialize a repository does not contain a working directory. </p>
+<p><code><br>$ cd /opt/git<br>$ mkdir project.git<br>$ cd project.git<br>$ git –bare init<br></code>  </p>
+<p>At this time, developers can add it to remote storage, push a branch to the first version of the project was uploaded to the warehouse. It should be noted that every time you add a new project requires the host through the shell login and create a pure warehouse. We may wish to gitserver as the git user and the warehouse where the host name. If you run the host within the network, and set gitserver in the DNS to point the host, then the following commands are available. </p>
+<p><code><br>$ cd myproject<br>$ git init<br>$ git add .<br>$ git commit -m ‘initial commit’<br>$ git remote add origin git@gitserver:/opt/git/project.git<br>$ git push origin master<br></code>  </p>
+<p>Thus, cloning and push other people the same become very simple: </p>
+<p><code><br>$ git clone git@gitserver:/opt/git/project.git<br>$ vim README<br>$ git commit -am ‘fix for the README file’<br>$ git push origin master<br></code>  </p>
+<p>Using this method can be very quick to set up a small number of developers can read and write Git services. </p>
+<p>As an extra precaution, you can use Git comes with a simple tool to git-shell git users to limit the activities associated only with Git. Make it git user login shell, then the user can not have a normal shell access to the host. To achieve this, the need to specify the user’s login shell is a git-shell, rather than bash or csh. You may have to edit / etc / passwd file  </p>
+<p><code>$ sudo vim /etc/passwd</code></p>
+<p>In the end of the file, you should be able to find the line like this:  </p>
+<p><code>git:x:1000:1000::/home/git:/bin/sh</code></p>
+<p>The bin / sh to / usr / bin / git-shell (or, which git-shell to see its location). Modified the way the bank is as follows:  </p>
+<p><code>git:x:1000:1000::/home/git:/usr/bin/git-shell</code></p>
+<p>Now git user can only use SSH connection to push and get Git repository, and can not directly use the host shell. Try to log on, you will see the following information about this rejection: </p>
+<p><code><br>$ ssh git@gitserver<br>fatal: What do you think I am? A shell?<br>Connection to gitserver closed.<br></code>  </p>
+<p>via: <a href="http://www.codeweblog.com/git-server-group-level-structures/" target="_blank" rel="external">http://www.codeweblog.com/git-server-group-level-structures/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.aireadfun.com/blog/2012/12/10/git-server-group-level-structures/" data-id="cj054kddk000i3bk0g6mw8aag" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2012/12/17/the-sign-of-maturity-of-a-programmer/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          程序员成熟的标志
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2012/12/04/use-egypt-to-create-call-graphs/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Use Egypt To Create Call Graphs</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/R/">R</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/airead-manager/">airead-manager</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bugzilla-nginx/">bugzilla nginx</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/career/">career</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dbus-glib/">dbus-glib</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/emacs/">emacs</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git-ssh/">git ssh</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-autotools/">linux-tools autotools</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-git/">linux-tools git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-graphviz/">linux-tools graphviz</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nodejs/">nodejs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/octopress/">octopress</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python-buildout/">python buildout</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/哲学/">哲学</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">June 2014</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">August 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">March 2013</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">February 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">January 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">December 2012</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">November 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">March 2012</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">August 2011</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step7/">airead-manager-outline-step7</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step6/">airead-manager-outline-step6</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step5/">airead-manager-outline-step5</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step4/">airead-manager-outline-step4</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step3/">airead-manager-outline-step3</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Airead Fan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

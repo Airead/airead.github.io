@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Step-By-Step Example Of Autotools For Beginner | Airead Fan&#39;s</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="This is a simple autotools example for beginner. You can easily follow it. After that you should be able to use autotools for your own project without complex features. This example shows how to use a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Step-By-Step Example Of Autotools For Beginner">
+<meta property="og:url" content="http://www.aireadfun.com/blog/2012/12/03/study-automake/index.html">
+<meta property="og:site_name" content="Airead Fan's">
+<meta property="og:description" content="This is a simple autotools example for beginner. You can easily follow it. After that you should be able to use autotools for your own project without complex features. This example shows how to use a">
+<meta property="og:updated_time" content="2015-10-01T05:23:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Step-By-Step Example Of Autotools For Beginner">
+<meta name="twitter:description" content="This is a simple autotools example for beginner. You can easily follow it. After that you should be able to use autotools for your own project without complex features. This example shows how to use a">
+  
+    <link rel="alternative" href="/atom.xml" title="Airead Fan&#39;s" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Airead Fan&#39;s</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Fragments of memories</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.aireadfun.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-study-automake" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2012/12/03/study-automake/" class="article-date">
+  <time datetime="2012-12-03T05:02:00.000Z" itemprop="datePublished">2012-12-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux-tools-autotools/">linux-tools autotools</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Step-By-Step Example Of Autotools For Beginner
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is a simple autotools example for beginner. You can easily follow it. After that you should be able to use autotools for your own project without complex features. This example shows how to use autoconf/automake, how to edit configure.ac/Makefile.am and how to disable default CFLAGS=’-g -O2’ for debug etc. OK, let’s do it!</p>
+<p><code><br>autoconf version: 2.68<br>automake version: 1.11.3<br>Ubuntu 12.04<br></code></p>
+<a id="more"></a>
+<h2 id="Create-Sources"><a href="#Create-Sources" class="headerlink" title="Create Sources"></a>Create Sources</h2><p>If you want to use autotools in your project, first of all you should have an existing one. following is an example I use.<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">summary-<span class="number">1.0</span>.<span class="number">0</span></div><div class="line">├── doc             <span class="comment">#project documents</span></div><div class="line">│   └── OVERVIEW</div><div class="line">├── man             <span class="comment">#manuals</span></div><div class="line">│   └── summary.<span class="number">8</span></div><div class="line">├── script          <span class="comment">#useful scripts</span></div><div class="line">│   └── summary.sh</div><div class="line">└── src             <span class="comment">#source code</span></div><div class="line">    ├── <span class="class"><span class="keyword">lib</span>         <span class="comment">#general functions</span></span></div><div class="line">    │   ├── <span class="class"><span class="keyword">lib</span>.<span class="title">c</span></span></div><div class="line">    │   └── <span class="class"><span class="keyword">lib</span>.<span class="title">h</span></span></div><div class="line">    └── person      <span class="comment">#one program</span></div><div class="line">        ├── <span class="keyword">do</span>.c</div><div class="line">        ├── <span class="keyword">do</span>.h</div><div class="line">        ├── main.c</div><div class="line">        └── main.h</div></pre></td></tr></table></figure><br>you can <a href="/downloads/code/autotools/summary-1.0.0.tar.gz">DOWNLOAD</a> this project. Of course, you can create your own project.</p>
+<h2 id="Autoconf"><a href="#Autoconf" class="headerlink" title="Autoconf"></a>Autoconf</h2><h3 id="Generating-configure-ac-In-summary-1-0-0-Use-autoscan"><a href="#Generating-configure-ac-In-summary-1-0-0-Use-autoscan" class="headerlink" title="Generating configure.ac In summary-1.0.0, Use autoscan"></a>Generating configure.ac In summary-1.0.0, Use <strong>autoscan</strong></h3><p><code><br>airead@airead:/tmp/summary-1.0.0$ ls<br>doc  man  script  src<br>airead@airead:/tmp/summary-1.0.0$ autoscan<br>airead@airead:/tmp/summary-1.0.0$ ls<br>autoscan.log  configure.scan  doc  man  script  src<br>airead@airead:/tmp/summary-1.0.0$<br>airead@airead:/tmp/summary-1.0.0$ mv configure.scan configure.ac<br>airead@airead:/tmp/summary-1.0.0$ ls<br>autoscan.log  configure.ac  doc  man  script  src<br></code><br>autoscan produces two files autoscan.log and configure.scan. Then we rename <strong>configure.scan</strong> to <strong>configure.ac</strong> which will be used by <strong>autoconf</strong>.</p>
+<p>The configure is not perfect, so we should edit it.<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mv</div><div class="line">AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])</div><div class="line">to</div><div class="line">AC_INIT([summary], [1.0.0], [fgh1987168@gmail.com]) <span class="comment">#or your E-mail</span></div></pre></td></tr></table></figure></p>
+<h3 id="Generating-configure-Use-autoconf"><a href="#Generating-configure-Use-autoconf" class="headerlink" title="Generating configure, Use autoconf"></a>Generating configure, Use <strong>autoconf</strong></h3><p><code><br>airead@airead:/tmp/summary-1.0.0$ ls<br>autoscan.log  configure.ac  doc  man  script  src<br>airead@airead:/tmp/summary-1.0.0$ autoconf<br>airead@airead:/tmp/summary-1.0.0$ ls<br>autom4te.cache  configure     doc  script<br>autoscan.log    configure.ac  man  src<br></code><br>autoconf produces shell script <strong>configure</strong> used by user and autom4te.cache which you can safely remove it. We already have <strong>configure</strong>, but where is the <strong>Makefile</strong>?</p>
+<h2 id="Automake"><a href="#Automake" class="headerlink" title="Automake"></a>Automake</h2><h3 id="The-Relationship-Between-Makefile-am-Makefile-in-And-Makefile"><a href="#The-Relationship-Between-Makefile-am-Makefile-in-And-Makefile" class="headerlink" title="The Relationship Between Makefile.am, Makefile.in And Makefile"></a>The Relationship Between Makefile.am, Makefile.in And Makefile</h3><p>Makefile.am is a programmer-defined file and is used by automake to generate the Makefile.in file. The ./configure script will use the Makefile.in to generate a Makefile.</p>
+<h3 id="Create-Makefile-am"><a href="#Create-Makefile-am" class="headerlink" title="Create Makefile.am"></a>Create Makefile.am</h3><p>We now prepare the Makefile.am file for each of directories. Automake will step into each of them and produce the corresponding Makefile.in file.</p>
+<p><code>airead@airead:/tmp/summary-1.0.0$ vim Makefile.am</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">AUTOMAKE_OPTIONS = foreign</div><div class="line">SUBDIRS = doc man script src</div></pre></td></tr></table></figure><br>the first line sets automake mode. “foreign” means not GNU, and is common for avoiding boring messages about files organized differently from what gnu expects.<br>The second line shows a list of subdirectories to descend for further work.</p>
+<p><code>airead@airead:/tmp/summary-1.0.0$ vim man/Makefile.am</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">man_MANS = summary.8</div></pre></td></tr></table></figure><br>In general, the uppercase, suffix part like “_PROGRAMS” is called primary and tells partially what to perform on the argument; the lowecase, prefix (it’s not given a name) tells the directory where to install. So <strong>man_MANS</strong> installs manuals at $(PREFIX)/share/man.</p>
+<p><code>airead@airead:/tmp/summary-1.0.0$ vim script/Makefile.am</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin_SCRIPTS = summary.sh</div></pre></td></tr></table></figure><br>installs scripts in $(PREFIX)/bin</p>
+<p><code>airead@airead:/tmp/summary-1.0.0$ vim doc/Makefile.am</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">docdir = $(datadir)/doc/@PACKAGE@</div><div class="line">doc_DATA = OVERVIEW</div></pre></td></tr></table></figure><br>if “abc” is wanted for prefix, “abcdir” is to be specified. E.g. the code above expands to $(PREFIX)/share/doc/summary (“@PACKAGE@” will be expanded by autoconf when producing the final Makefile, see below). $(datadir) is known by all configure scripts it generates, $(PREFIX)/share.</p>
+<p>Now let’s create src/Makefile.am, it’s a little complex.<br><code>airead@airead:/tmp/summary-1.0.0$ vim src/Makefile.am</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SUBDIRS=lib person</div></pre></td></tr></table></figure><br>it shows a list of subdirectories to descend for further work. Continue to create…</p>
+<p><code>airead@airead:/tmp/summary-1.0.0$ vim src/lib/Makefile.am</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">noinst_LIBRARIES=libutils.a</div><div class="line">libutils_a_SOURCES=lib.c lib.h</div></pre></td></tr></table></figure><br>The special prefix <strong>noinst_</strong> indicates that the objects in question should be built but not installed at all. Each _LIBRARIES variable is a list of the libraries to be built. So <strong>noinst_LIBRARIES</strong> build libutils.a but not install. <strong>_SOURCES</strong> list sources of libutils.a.<br>Extra objects can be added to a library using the <strong>library_LIBADD</strong> variable.</p>
+<p><code>airead@airead:/tmp/summary-1.0.0$ vim src/person/Makefile.am</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">AM_CFLAGS = -I../lib</div><div class="line"></div><div class="line">bin_PROGRAMS = summary</div><div class="line">summary_SOURCES = main.c main.h do.c do.h</div><div class="line">summary_LDADD = ../lib/libutils.a</div></pre></td></tr></table></figure><br>Variables that end with _PROGRAMS are special variables that list programs that the resulting Makefile should build. <strong>bin_PROGRAMS</strong> indicates that program summary should be built and install in $(PREFIX)/bin. its sources shows in <strong>summary_LDADD</strong>. <strong>summary_LDADD</strong> indicates that the program needs libutils.a when linking.</p>
+<h3 id="Generating-Makefile-in-Use-automake"><a href="#Generating-Makefile-in-Use-automake" class="headerlink" title="Generating Makefile.in, Use automake"></a>Generating Makefile.in, Use <strong>automake</strong></h3><p>let’s run <strong>automake</strong>:<br><code><br>airead@airead:/tmp/summary-1.0.0$ automake<br>configure.ac: no proper invocation of AM_INIT_AUTOMAKE was found.<br>configure.ac: You should verify that configure.ac invokes AM_INIT_AUTOMAKE,<br>configure.ac: that aclocal.m4 is present in the top-level directory,<br>configure.ac: and that aclocal.m4 was recently regenerated (using aclocal).<br>automake: no `Makefile.am’ found for any configure output<br>automake: Did you forget AC_CONFIG_FILES([Makefile]) in configure.ac?<br></code><br>So we should edit configure.ac again. add following after AC_INIT() in configure.ac.</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">AM_INIT_AUTOMAKE</span><span class="params">(summary, <span class="number">1.0</span>.<span class="number">0</span>)</span></span></div></pre></td></tr></table></figure>
+<h2 id="Integrating-The-Checking-Autoconf-Part-And-The-Building-Automake-Part"><a href="#Integrating-The-Checking-Autoconf-Part-And-The-Building-Automake-Part" class="headerlink" title="Integrating The Checking (Autoconf) Part And The Building (Automake) Part"></a>Integrating The Checking (Autoconf) Part And The Building (Automake) Part</h2><p>Now there are some new Makefile.am in each of directories, so we should reautoscan for extra information in the project.<br><code>airead@airead:/tmp/summary-1.0.0$ autoscan</code><br><code>airead@airead:/tmp/summary-1.0.0$ diff configure.ac configure.scan</code><br><figure class="highlight diff"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">5c5</div><div class="line">&lt; AC_INIT([summary], [1.0.0], [fgh1987168@gmail.com])</div><div class="line"><span class="comment">---</span></div><div class="line">&gt; AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])</div><div class="line">9,10d8</div><div class="line">&lt; AM_INIT_AUTOMAKE(summary, 1.0.0)</div><div class="line">&lt;</div><div class="line">22a21,27</div><div class="line">&gt; AC_CONFIG_FILES([Makefile</div><div class="line">&gt;                  doc/Makefile</div><div class="line">&gt;                  man/Makefile</div><div class="line">&gt;                  script/Makefile</div><div class="line">&gt;                  src/Makefile</div><div class="line">&gt;                  src/lib/Makefile</div><div class="line">&gt;                  src/person/Makefile])</div></pre></td></tr></table></figure><br>we found that the configure.ac misses the AC_CONFIG_FILES([*]), so put those above AC_OUTPUT in configure.ac. after that, run following command:</p>
+<p><code><br>airead@airead:/tmp/summary-1.0.0$ aclocal<br>airead@airead:/tmp/summary-1.0.0$ autoheader<br>airead@airead:/tmp/summary-1.0.0$ autoconf<br></code><br><code>aclocal</code> program creates the file ‘aclocal.m4’ by combining stock installed macros, user defined macros and the contents of ‘acinclude.m4’ to define all of the macros required by ‘configure.ac’ in a single file.<br><code>autoheader</code> runs m4 over ‘configure.ac’, but with key macros defined differently than when autoconf is executed, such that suitable cpp definitions are output to ‘config.h.in’.<br><code>autoconf</code> expands the m4 macros in ‘configure.ac’, perhaps using macro definitions from ‘aclocal.m4’, to generate the configure script.</p>
+<p>Then we call automake to generate Makefile.in.<br><code><br>airead@airead:/tmp/summary-1.0.0$ automake –add-missing<br>configure.ac:9: installing `./install-sh’<br>configure.ac:9: installing `./missing’<br>src/lib/Makefile.am:1: library used but `RANLIB’ is undefined<br>src/lib/Makefile.am:1:   The usual way to define `RANLIB’ is to add `AC_PROG_RANLIB’<br>src/lib/Makefile.am:1:   to `configure.ac’ and run `autoconf’ again.<br>src/lib/Makefile.am: installing `./depcomp’<br></code></p>
+<p>Read the error information and fix it by puting <code>AC_PROG_RANLIB</code> after <code>AC_INIT_AUTOMAKE()</code> in configure.ac. run <code>automake</code> again.<br><code>airead@airead:/tmp/summary-1.0.0$ automake</code></p>
+<p>Now we have one usable configure script.</p>
+<h2 id="Build-Project"><a href="#Build-Project" class="headerlink" title="Build Project"></a>Build Project</h2><p><code>airead@airead:/tmp/summary-1.0.0$ ./configure</code><br>configure do two things:</p>
+<ol>
+<li>scan for dependencies on the basis of the AC_* macros instructed in configure.ac. If there’s something wrong/missing in the system, an opportune error message will be dumped.</li>
+<li>for each Makefile requested in AC_OUTPUT(), translate the Makefile.in template for generating the final Makefile. The main makefile will provide the most common targets like install, clean, distclean, uninstall et al.</li>
+</ol>
+<p>If configure succeeds, all the Makefile files are available. Run make.<br><code>airead@airead:/tmp/summary-1.0.0$ make</code><br>If no accident, make will products src/lib/libutils.a and src/person/summary which we can execute. Run following if you like.<br><code>airead@airead:/tmp/summary-1.0.0$ make install</code></p>
+<h2 id="Change-Default-CFLAGS-For-Debug"><a href="#Change-Default-CFLAGS-For-Debug" class="headerlink" title="Change Default CFLAGS For Debug"></a>Change Default CFLAGS For Debug</h2><p>autoconf default CFLAGS is ‘-g -O2’, it is inconvenient to debug program. How to change this?<br>Macro <code>AC_PROG_CC</code> in configure.ac determines a C compiler to use. If using the GNU C compiler, set shell variable GCC to ‘yes’. If output variable CFLAGS was not already set, set it to ‘-g -O2’ for the GNU C compiler (‘-O2’ on systems where GCC does not accept ‘-g’), or ‘-g’ for other compilers.<br>Put <code>CFLAGS=&quot;-g -O0&quot;</code> above <code>AC_PROG_CC</code>, then<br><code>airead@airead:/tmp/summary-1.0.0$ autoreconf</code><br>It works well.<br><strong>note:</strong> There is no space on either side of <code>=</code>.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a href="http://markuskimius.wikidot.com/programming:tut:autotools/" target="_blank" rel="external">Autotools Tutorial for Beginners</a></li>
+<li><a href="http://mij.oltrelinux.com/devel/autoconf-automake/" target="_blank" rel="external">A tutorial for porting to autoconf &amp; automake</a></li>
+<li><a href="http://www.gnu.org/software/automake/manual/automake.html" target="_blank" rel="external">automake manual</a></li>
+<li><a href="http://www.sourceware.org/autobook/autobook/autobook.html#SEC_Top" target="_blank" rel="external">autobook</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.aireadfun.com/blog/2012/12/03/study-automake/" data-id="cj054kddf000f3bk0kjn8cem9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2012/12/04/use-egypt-to-create-call-graphs/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Use Egypt To Create Call Graphs
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2012/11/19/the-eight-levels-of-programmers/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">程序员的八个级别</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/R/">R</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/airead-manager/">airead-manager</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bugzilla-nginx/">bugzilla nginx</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/career/">career</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dbus-glib/">dbus-glib</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/emacs/">emacs</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git-ssh/">git ssh</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-autotools/">linux-tools autotools</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-git/">linux-tools git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-graphviz/">linux-tools graphviz</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nodejs/">nodejs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/octopress/">octopress</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python-buildout/">python buildout</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/哲学/">哲学</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">June 2014</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">August 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">March 2013</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">February 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">January 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">December 2012</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">November 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">March 2012</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">August 2011</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step7/">airead-manager-outline-step7</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step6/">airead-manager-outline-step6</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step5/">airead-manager-outline-step5</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step4/">airead-manager-outline-step4</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step3/">airead-manager-outline-step3</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Airead Fan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

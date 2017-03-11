@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Using git through a SOCKS proxy (or SSH tunnel) | Airead Fan&#39;s</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Git supports two protocols: HTTP and native git (git://). Unfortunately, git over HTTP is terribly slow. As a result, most public repositories don’t prominently display an HTTP URL, because most peopl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Using git through a SOCKS proxy (or SSH tunnel)">
+<meta property="og:url" content="http://www.aireadfun.com/blog/2013/08/27/using-git-through-a-socks-proxy-or-ssh-tunnel/index.html">
+<meta property="og:site_name" content="Airead Fan's">
+<meta property="og:description" content="Git supports two protocols: HTTP and native git (git://). Unfortunately, git over HTTP is terribly slow. As a result, most public repositories don’t prominently display an HTTP URL, because most peopl">
+<meta property="og:updated_time" content="2015-10-01T05:06:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Using git through a SOCKS proxy (or SSH tunnel)">
+<meta name="twitter:description" content="Git supports two protocols: HTTP and native git (git://). Unfortunately, git over HTTP is terribly slow. As a result, most public repositories don’t prominently display an HTTP URL, because most peopl">
+  
+    <link rel="alternative" href="/atom.xml" title="Airead Fan&#39;s" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Airead Fan&#39;s</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Fragments of memories</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.aireadfun.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-using-git-through-a-socks-proxy-or-ssh-tunnel" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2013/08/27/using-git-through-a-socks-proxy-or-ssh-tunnel/" class="article-date">
+  <time datetime="2013-08-26T16:37:00.000Z" itemprop="datePublished">2013-08-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/git-ssh/">git ssh</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Using git through a SOCKS proxy (or SSH tunnel)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Git supports two protocols: HTTP and native git (git://). Unfortunately, git over HTTP is terribly slow. As a result, most public repositories don’t prominently display an HTTP URL, because most people would prefer the git:// URL.</p>
+<p>In a corporate environment, one does not commonly have the ability to open arbitrary ports on the outside internet. In that case, the git:// protocol is effectively unusable without an unrestricted SOCKS proxy.</p>
+<p>To work around the problem, I create my own SOCKS proxy via SSH, then use a wrapper script with git. In essence, this allows me to use git through an SSH tunnel. Any repository, anywhere: one tunnel.<br><a id="more"></a></p>
+<blockquote><p>A note on SOCKS and HTTP proxies</p>
+<p>There are two common proxy types in the wild: SOCKS and HTTP. Either type can technically proxy any kind of data, but corporate proxies are usually configured to permit only HTTP and HTTPS, and only on known ports. If you don’t know what type of proxy your company uses, it’s probably HTTP, and it’s probably too restrictive to be useful for the native git protocol.</p>
+<p>Most software supports the use of an HTTP proxy, but SOCKS proxy support is a little bit unusual. Mozilla Firefox and Thunderbird are notable for their excellent SOCKS v4 and v5 support, including remote DNS.</p>
+</blockquote>
+<h2 id="Procedure"><a href="#Procedure" class="headerlink" title="Procedure"></a>Procedure</h2><h3 id="1-Install-prerequisites"><a href="#1-Install-prerequisites" class="headerlink" title="1. Install prerequisites"></a>1. Install prerequisites</h3><p>To get everything working, you will need these tools:</p>
+<ul>
+<li>git</li>
+<li>socat</li>
+<li>ssh</li>
+</ul>
+<h3 id="2-Create-your-SOCKS4-proxy-using-SSH"><a href="#2-Create-your-SOCKS4-proxy-using-SSH" class="headerlink" title="2. Create your SOCKS4 proxy using SSH"></a>2. Create your SOCKS4 proxy using SSH</h3><p>If you don’t already have an unrestricted SOCKS proxy, you can create one with the standard openssh client. Much as -L and -R handle port forwarding, the -D option creates a SOCKS version 4 proxy:  </p>
+<p><code>ssh -nNT -D 8119 remote.host</code>  </p>
+<p>This command starts a SOCKS v4 proxy listening on localhost, port 8119. Requests through the proxy will be proxied via the tunnel and emitted by the remote host.  </p>
+<p>If you substitute <code>autossh</code> for <code>ssh</code>, you can use the exact same arguments to create a tunnel that will automatically restart and reauthenticate itself in the event of a lost connection.</p>
+<h3 id="3-Put-together-the-wrapper-script"><a href="#3-Put-together-the-wrapper-script" class="headerlink" title="3. Put together the wrapper script"></a>3. Put together the wrapper script</h3><p>Git supports HTTP proxies out of the box, but it has no builtin SOCKS support. We need a wrapper script calling socat to provide the support. I got the original script from a blog post by Emil Sit. He was using an HTTP proxy instead of SOCKS.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"><span class="meta">#</span></div><div class="line"><span class="meta"># Use socat to proxy git through a SOCKS proxy.</span></div><div class="line"><span class="meta"># Useful if you are trying to clone git:// from inside a company.</span></div><div class="line"><span class="meta">#</span></div><div class="line"><span class="meta"># See http://tinyurl.com/8xvpny for Emil Sit's original HTTP proxy script.</span></div><div class="line"><span class="meta"># See http://tinyurl.com/45atuth for updated SOCKS version.</span></div><div class="line"><span class="meta">#</span></div><div class="line"></div><div class="line"><span class="meta"># Configuration.</span></div><div class="line">_proxy=localhost</div><div class="line">_proxyport=<span class="number">8119</span></div><div class="line"></div><div class="line">exec socat STDIO SOCKS4:$_proxy:$<span class="number">1</span>:$<span class="number">2</span>,socksport=$_proxyport</div></pre></td></tr></table></figure>
+<p>I put this script in my home directory at <code>~/bin/git-proxy-wrapper</code>.<br>Remember to make it executable! (<code>chmod +x ~/bin/git-proxy-wrapper</code>)</p>
+<h3 id="4-Set-environment-variables"><a href="#4-Set-environment-variables" class="headerlink" title="4. Set environment variables"></a>4. Set environment variables</h3><p>Git checks the GIT_PROXY_COMMAND environment variable when retrieving data. To make git:// work through your SOCKS proxy, set the variable to the git-proxy-wrapper script.</p>
+<p>Tcsh:<br><code>setenv GIT_PROXY_COMMAND ~/bin/git-proxy-wrapper</code>  </p>
+<p>Bash:<br><code>export GIT_PROXY_COMMAND=~/bin/git-proxy-wrapper</code></p>
+<h3 id="5-Finish-up"><a href="#5-Finish-up" class="headerlink" title="5. Finish up"></a>5. Finish up</h3><p>At this point, git should work with git:// URLs as long as your proxy or ssh proxy session are working. Test it out.</p>
+<p>If everything works, you can write the git proxy wrapper setting into your ~/.gitconfig. It’s a simple git config command:</p>
+<p>git config –global core.gitproxy ~/bin/git-proxy-wrapper</p>
+<p>via: <a href="http://www.jones.ec/blogs/a/entry/using_git_through_a_socks" target="_blank" rel="external">http://www.jones.ec/blogs/a/entry/using_git_through_a_socks</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.aireadfun.com/blog/2013/08/27/using-git-through-a-socks-proxy-or-ssh-tunnel/" data-id="cj054kdf4001g3bk03lyot2no" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2013/08/29/buildout-ru-men/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          buildout 入门
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2013/03/21/three-ways-to-gain-programming-experience/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">程序员：增加编程经验的3种途径</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/R/">R</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/airead-manager/">airead-manager</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bugzilla-nginx/">bugzilla nginx</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/career/">career</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dbus-glib/">dbus-glib</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/emacs/">emacs</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git-ssh/">git ssh</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-autotools/">linux-tools autotools</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-git/">linux-tools git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-graphviz/">linux-tools graphviz</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nodejs/">nodejs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/octopress/">octopress</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python-buildout/">python buildout</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/哲学/">哲学</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">June 2014</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">August 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">March 2013</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">February 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">January 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">December 2012</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">November 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">March 2012</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">August 2011</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step7/">airead-manager-outline-step7</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step6/">airead-manager-outline-step6</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step5/">airead-manager-outline-step5</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step4/">airead-manager-outline-step4</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step3/">airead-manager-outline-step3</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Airead Fan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

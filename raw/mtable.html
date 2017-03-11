@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>乘法表</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+        }
+
+        table td {
+            border: 1px solid #069;
+            padding: 8px 16px;
+        }
+
+        body {
+            text-align: center;
+        }
+
+        h1 {
+            font-family: "微软雅黑", Verdana, sans-serif, "宋体";
+            color: #666;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        var query = getQuery();
+        var num = parseInt(query.num) || 9;
+        var tableWidth = 130 * num;
+
+        document.write("<table width=" + tableWidth + ">");
+        var str = [num, num].join('x');
+        document.write("<h1>" + str + "</h1>");
+        for (var x = 1; x <= num; x++) {
+            document.write("<tr>");
+            for (var y = 1; y <= x; y++) {
+                document.write("<td>" + x + " X " + y + "=" + (x * y) + "</td>");
+            }
+            document.write("</tr>");
+        }
+        document.write("</table>");
+
+        function getQuery() {
+            var query = {};
+            var search = location.search.slice(1);
+            var values = search.split('&');
+            for (var i = 0; i < values.length; i++) {
+                var tmps = values[i].split('=');
+                query[tmps[0]] = tmps[1];
+            }
+
+            return query;
+        }
+    </script>
+</body>
+
+</html>

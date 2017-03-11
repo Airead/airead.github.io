@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>DBus glib 各数据类型接收与发送详解—C语言（3） | Airead Fan&#39;s</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="上一篇讨论了高级数据类型的传递，这次我们就讨论更难一点的， 复杂数据类型 的传递。为什么说复杂呢？因为它是高级数据类型的杂揉，本来高级数据类型就挺难的了，再杂揉一下，不用活了。
+同样先给出 Python 编写的服务与测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DBus glib 各数据类型接收与发送详解—C语言（3）">
+<meta property="og:url" content="http://www.aireadfun.com/blog/2012/03/26/dbus-glib-datatypes-receive-and-send-3/index.html">
+<meta property="og:site_name" content="Airead Fan's">
+<meta property="og:description" content="上一篇讨论了高级数据类型的传递，这次我们就讨论更难一点的， 复杂数据类型 的传递。为什么说复杂呢？因为它是高级数据类型的杂揉，本来高级数据类型就挺难的了，再杂揉一下，不用活了。
+同样先给出 Python 编写的服务与测试">
+<meta property="og:updated_time" content="2015-10-01T05:06:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DBus glib 各数据类型接收与发送详解—C语言（3）">
+<meta name="twitter:description" content="上一篇讨论了高级数据类型的传递，这次我们就讨论更难一点的， 复杂数据类型 的传递。为什么说复杂呢？因为它是高级数据类型的杂揉，本来高级数据类型就挺难的了，再杂揉一下，不用活了。
+同样先给出 Python 编写的服务与测试">
+  
+    <link rel="alternative" href="/atom.xml" title="Airead Fan&#39;s" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Airead Fan&#39;s</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Fragments of memories</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.aireadfun.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-dbus-glib-datatypes-receive-and-send-3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2012/03/26/dbus-glib-datatypes-receive-and-send-3/" class="article-date">
+  <time datetime="2012-03-26T10:41:00.000Z" itemprop="datePublished">2012-03-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/dbus-glib/">dbus-glib</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      DBus glib 各数据类型接收与发送详解—C语言（3）
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>上一篇讨论了高级数据类型的传递，这次我们就讨论更难一点的， <strong>复杂数据类型</strong> 的传递。为什么说复杂呢？因为它是高级数据类型的杂揉，本来高级数据类型就挺难的了，再杂揉一下，不用活了。</p>
+<p>同样先给出 Python 编写的服务与测试<br><a id="more"></a></p>
+<h2 id="Python-DBus-服务进程"><a href="#Python-DBus-服务进程" class="headerlink" title="Python DBus 服务进程"></a>Python DBus 服务进程</h2>
+<h2 id="Python-测试服务"><a href="#Python-测试服务" class="headerlink" title="Python 测试服务"></a>Python 测试服务</h2>
+<h2 id="使用-C-实现复杂数据类型的传递"><a href="#使用-C-实现复杂数据类型的传递" class="headerlink" title="使用 C 实现复杂数据类型的传递"></a>使用 C 实现复杂数据类型的传递</h2><p>以下代码仅仅为了演示数据类型的传递，不保证没有内存泄漏，请仔细检查后再使用。</p>
+<h3 id="STRUCT-ARRAY"><a href="#STRUCT-ARRAY" class="headerlink" title="STRUCT_ARRAY"></a>STRUCT_ARRAY</h3><p>这次我们要传递的是结构体数组 “a(si)”。</p>
+<p>因为没有 “(si)” 类型，所以我们自己定义。同样因为没有 “a(si)”，所以我们也自己定义。那么接下来如代码所示，就可以进行传递了。</p>
+<p>只要知道哪种数据与哪种类型对应后，就不难了。难就难在不知道该与哪种数据类型对应，同时又对 dbus-glib 与 glib 不熟，这样的话，真的是比较头痛的一件事。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> DBUS_STRUCT_STRING_INT (                         \</span></div><div class="line">        dbus_g_type_get_struct ( <span class="meta-string">"GValueArray"</span>, G_TYPE_STRING,  \</div><div class="line">                                 G_TYPE_INT, G_TYPE_INVALID))</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> DBUS_ARRAY_STRUCT_STRING_INT ( \</span></div><div class="line">        dbus_g_type_get_collection(<span class="meta-string">"GPtrArray"</span>, DBUS_STRUCT_STRING_INT) )</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">send_recv_struct_array</span><span class="params">(DBusGProxy *proxy)</span></span></div><div class="line">&#123;</div><div class="line">    gchar *method;</div><div class="line">    GError *error = <span class="literal">NULL</span>;</div><div class="line">    GPtrArray *gparray, *ret;</div><div class="line">    GValueArray *garray[<span class="number">3</span>], *tmp_garray;</div><div class="line">    GValue gval[<span class="number">3</span>][<span class="number">2</span>] = &#123; &#123; &#123;<span class="number">0</span>&#125; &#125; &#125;;</div><div class="line">    GValue *tmp_gval;</div><div class="line">    gchar *str[<span class="number">3</span>] = &#123;<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"cherry"</span>&#125;;</div><div class="line">    gint num[<span class="number">3</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>&#125;;</div><div class="line">    <span class="keyword">int</span> i, j;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</div><div class="line">        g_value_init (&amp;gval[i][<span class="number">0</span>], G_TYPE_STRING);</div><div class="line">        g_value_set_string(&amp;gval[i][<span class="number">0</span>], str[i]);</div><div class="line">        g_value_init (&amp;gval[i][<span class="number">1</span>], G_TYPE_INT);</div><div class="line">        g_value_set_int(&amp;gval[i][<span class="number">1</span>], num[i]);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    gparray = g_ptr_array_new();</div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</div><div class="line">        garray[i] = g_value_array_new(<span class="number">0</span>);</div><div class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; <span class="number">2</span> ; j++) &#123;</div><div class="line">            g_value_array_append(garray[i], &amp;gval[i][j]);</div><div class="line">        &#125;</div><div class="line">        g_ptr_array_add(gparray, garray[i]);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    method = <span class="string">"StructArrayPrint"</span>;</div><div class="line">    <span class="keyword">if</span> (!dbus_g_proxy_call(proxy, method, &amp;error,</div><div class="line">                           DBUS_ARRAY_STRUCT_STRING_INT, gparray,</div><div class="line">                           G_TYPE_INVALID,</div><div class="line">                           DBUS_ARRAY_STRUCT_STRING_INT, &amp;ret,</div><div class="line">                           G_TYPE_INVALID)) &#123;</div><div class="line">        g_printerr(<span class="string">"call %s failed: %s\n"</span>, method, error-&gt;message);</div><div class="line">        g_error_free(error);</div><div class="line">        error = <span class="literal">NULL</span>;</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; ret-&gt;len; i++) &#123;</div><div class="line">        tmp_garray = g_ptr_array_index(ret, i);</div><div class="line">        tmp_gval = g_value_array_get_nth(tmp_garray, <span class="number">0</span>);</div><div class="line">        g_print(<span class="string">"%s: "</span>, g_value_get_string(tmp_gval));</div><div class="line">        tmp_gval = g_value_array_get_nth(tmp_garray, <span class="number">1</span>);</div><div class="line">        g_print(<span class="string">"%d\n"</span>, g_value_get_int(tmp_gval));</div><div class="line">    &#125;</div><div class="line">    g_print(<span class="string">"=================================\n\n"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure><br><em>*</em> DICT_DICT<br>下面演示的是一个 “a{sv}” 的数据类型，特别的是这里的 “v” 我们用它再来容纳一个 “a{ss}” 数据类型。这样的话是不是有点复杂了哇？</p>
+<p>源代码如下，俗话说，源代码上没有任何能够隐藏的秘密，有这句话吧?<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> DBUS_TYPE_G_STRING_VALUE_HASHTABLE                             \</span></div><div class="line">    dbus_g_type_get_map ( <span class="meta-string">"GHashTable"</span>, G_TYPE_STRING, G_TYPE_VALUE)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">send_recv_dictdict</span><span class="params">(DBusGProxy *proxy)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> i;</div><div class="line">    <span class="keyword">char</span> *method;</div><div class="line">    GHashTable *table, *ret, *subtable;</div><div class="line">    GHashTableIter iter, subiter;</div><div class="line">    gpointer key, value, subkey, subvalue;</div><div class="line">    GError *error = <span class="literal">NULL</span>;</div><div class="line">    GValue gval[<span class="number">2</span>] = <span class="number">0</span>;</div><div class="line">    gchar *table_value[<span class="number">2</span>][<span class="number">3</span>] = &#123; &#123;<span class="string">"renhao"</span>, <span class="string">"24"</span>, <span class="string">"male"</span>&#125;,</div><div class="line">                                &#123;<span class="string">"wenfeng"</span>, <span class="string">"22"</span>, <span class="string">"female"</span>&#125;&#125;;</div><div class="line"></div><div class="line">    table = g_hash_table_new(<span class="literal">NULL</span>, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) &#123;</div><div class="line">        g_value_init(&amp;gval[i], DBUS_TYPE_G_STRING_STRING_HASHTABLE);</div><div class="line">        g_value_take_boxed(&amp;gval[i],</div><div class="line">                           dbus_g_type_specialized_construct(</div><div class="line">                               DBUS_TYPE_G_STRING_STRING_HASHTABLE));</div><div class="line">        subtable = g_value_get_boxed(&amp;gval[i]);</div><div class="line">        g_hash_table_insert(subtable, <span class="string">"name"</span>, table_value[i][<span class="number">0</span>]);</div><div class="line">        g_hash_table_insert(subtable, <span class="string">"age"</span>, table_value[i][<span class="number">1</span>]);</div><div class="line">        g_hash_table_insert(subtable, <span class="string">"gender"</span>, table_value[i][<span class="number">2</span>]);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    g_hash_table_insert(table, <span class="string">"fanrenhao"</span>, &amp;gval[<span class="number">0</span>]);</div><div class="line">    g_hash_table_insert(table, <span class="string">"liwenfeng"</span>, &amp;gval[<span class="number">1</span>]);</div><div class="line"></div><div class="line">    method = <span class="string">"DictDictPrint"</span>;</div><div class="line">    <span class="keyword">if</span> (!dbus_g_proxy_call(proxy, method, &amp;error,</div><div class="line">                           DBUS_TYPE_G_STRING_VALUE_HASHTABLE, table,</div><div class="line">                           G_TYPE_INVALID,</div><div class="line">                           DBUS_TYPE_G_STRING_VALUE_HASHTABLE, &amp;ret,</div><div class="line">                           G_TYPE_INVALID)) &#123;</div><div class="line">        g_printerr(<span class="string">"call %s failed: %s\n"</span>, method, error-&gt;message);</div><div class="line">        g_error_free(error);</div><div class="line">        error = <span class="literal">NULL</span>;</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    g_print(<span class="string">"receive: dictionary\n"</span>);</div><div class="line">    g_hash_table_iter_init(&amp;iter, ret);</div><div class="line">    <span class="keyword">while</span> (g_hash_table_iter_next(&amp;iter, &amp;key, &amp;value)) &#123;</div><div class="line">            g_print(<span class="string">"%s:\n"</span>, (<span class="keyword">char</span> *)key);</div><div class="line">            subtable = g_value_get_boxed(value);</div><div class="line">            g_hash_table_iter_init(&amp;subiter, subtable);</div><div class="line">            <span class="keyword">while</span> (g_hash_table_iter_next(&amp;subiter, &amp;subkey, &amp;subvalue)) &#123;</div><div class="line">                g_print(<span class="string">"%s, %s\n"</span>, (<span class="keyword">char</span> *)subkey, (<span class="keyword">char</span> *)subvalue);</div><div class="line">            &#125;</div><div class="line">            g_print(<span class="string">"---------------------------------\n"</span>);</div><div class="line">        &#125;</div><div class="line">    g_print(<span class="string">"=================================\n\n"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="ObjectPath-Dict-Struct-Array"><a href="#ObjectPath-Dict-Struct-Array" class="headerlink" title="ObjectPath_Dict_Struct_Array"></a>ObjectPath_Dict_Struct_Array</h3><p>这是一个 “a(oa{sv})” 的数据类型。也就是说首先要定义一个 “a{sv}” 的数据类型， 再由 “a{sv}” 定义一个 “(oa{sv})”，最后再定义 “a(oa{sv})” 的数据类型。这很复杂吧，现实中真的传递过这样复杂的数据吗？ 真的出现过，就在 <strong>connman</strong> (connect manager 类似 network-manager 的东东) 的服务进程中！ 我就是因为它才接触到了 D-Bus, 它的 “a(oa{sv})” 真的是害得我不浅，所以才有了这篇文章。</p>
+<p>具体代码如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">send_recv_objectpath_dict_struct_array</span><span class="params">(DBusGProxy *proxy)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">//这个当成是期末考试的试题吧 ^_^</span></div><div class="line">    <span class="comment">//好吧，我承认是我懒了</span></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="C-D-Bus-测试完整代码"><a href="#C-D-Bus-测试完整代码" class="headerlink" title="C D-Bus 测试完整代码"></a>C D-Bus 测试完整代码</h3>
+<h2 id="Makefile"><a href="#Makefile" class="headerlink" title="Makefile"></a>Makefile</h2><p>见上篇</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.aireadfun.com/blog/2012/03/26/dbus-glib-datatypes-receive-and-send-3/" data-id="cj054kdd9000a3bk0r2353kt1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2012/11/19/the-eight-levels-of-programmers/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          程序员的八个级别
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2012/03/26/dbus-glib-datatypes-receive-and-send-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">DBus glib 各数据类型接收与发送详解—C语言（2）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/R/">R</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/airead-manager/">airead-manager</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bugzilla-nginx/">bugzilla nginx</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/career/">career</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dbus-glib/">dbus-glib</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/emacs/">emacs</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git-ssh/">git ssh</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-autotools/">linux-tools autotools</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-git/">linux-tools git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux-tools-graphviz/">linux-tools graphviz</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nodejs/">nodejs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/octopress/">octopress</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python-buildout/">python buildout</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/哲学/">哲学</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">June 2014</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">August 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">March 2013</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">February 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">January 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">December 2012</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">November 2012</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">March 2012</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">August 2011</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step7/">airead-manager-outline-step7</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step6/">airead-manager-outline-step6</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step5/">airead-manager-outline-step5</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step4/">airead-manager-outline-step4</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2014/06/15/airead-manager-outline-step3/">airead-manager-outline-step3</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Airead Fan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
